@@ -66,7 +66,9 @@ public class StationService {
             return;
         }
         //TODO: Send to telegram "Станции найдены:" и вывести список станций
-        String message = localeMessageService.getMessage("reply.stationBook.stationsFound","Emoji o_O ", foundedNames);
+        StringBuilder names = new StringBuilder();
+        foundedNames.forEach(name -> names.append(name).append("\n"));
+        String message = localeMessageService.getMessage("reply.stationBook.stationsFound","Emoji o_O ", names);
         System.out.println(message);
     }
 
