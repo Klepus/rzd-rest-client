@@ -8,8 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 
 @Service
 public class StationService {
@@ -23,7 +26,7 @@ public class StationService {
         this.stationCache = stationCach;
     }
 
-    public int getStationCode(String stationName) {
+    public int getByFullName(String stationName) {
         String stationNameParam = stationName.toUpperCase();
 
         Optional<Integer> stationCode = stationCache.getStationCode(stationNameParam);
@@ -39,7 +42,34 @@ public class StationService {
     }
 
 
-    public Optional<List<Station>> fetchStationsByPartOfName(String partOfName) {
+    public void searchStationByName(String stationName) {
+        String upperCaseStationName = stationName.toUpperCase();
+        Optional<String> optionalStationName = stationCache.getStationName(upperCaseStationName);
+
+        if (optionalStationName.isPresent()) {
+            //TODO: Send to telegram "Станция найдена"
+            System.out.println("Станция найдена");
+            return;
+        }
+        System.out.println("Нет в кэше, делаю запрос:");
+
+        List<Station> stations = fetchStationsByPartOfName(stationName).orElse(Collections.emptyList());
+        List<String> foundedNames = stations.stream()
+                .map(Station::getName)
+                .filter(name -> name.contains(upperCaseStationName))
+                .collect(Collectors.toList());
+        if (foundedNames.isEmpty()) {
+            //TODO: Send to telegram "Станция не найдена"
+            System.out.println("Станция не найдена");
+            return;
+        }
+        //TODO: Send to telegram "Станции найдены:" и вывести список станций
+        System.out.println("Станции найдены:");
+        foundedNames.forEach(System.out::println);
+    }
+
+    private Optional<List<Station>> fetchStationsByPartOfName(String partOfName) {
+        System.out.println("fetching...");
         ResponseEntity<List<Station>> responseEntity =
                 restTemplate.exchange(String.format(requestURL, partOfName.toUpperCase()), HttpMethod.GET, null, new ParameterizedTypeReference<List<Station>>() {
                 });

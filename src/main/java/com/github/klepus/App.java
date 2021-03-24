@@ -14,20 +14,24 @@ public class App {
         StationService stationService = applicationContext.getBean("stationService", StationService.class);
         TrainService trainService = applicationContext.getBean("trainService", TrainService.class);
 
-        System.out.println(stationService.getStationCode("мосва"));
-        System.out.println(stationService.getStationCode("москва"));
-        System.out.println(stationService.getStationCode("москва"));
-        System.out.println(stationService.getStationCode("москоу"));
-        System.out.println(stationService.getStationCode("Иваново"));
-        System.out.println(stationService.getStationCode("Ивановофыв"));
+        System.out.println(stationService.getByFullName("мосва"));
+        System.out.println(stationService.getByFullName("москва"));
+        System.out.println(stationService.getByFullName("москва"));
+        System.out.println(stationService.getByFullName("москоу"));
+        System.out.println(stationService.getByFullName("Иваново"));
+        System.out.println(stationService.getByFullName("Ивановофыв"));
 
-        int departure = stationService.getStationCode("москва");
-        int arrival = stationService.getStationCode("Иваново");
+        int departure = stationService.getByFullName("москва");
+        int arrival = stationService.getByFullName("Иваново");
         String date = "24.03.2021";
 
         List<Train> trainList = trainService.getTrainsByParams(departure, arrival, date);
         trainList.forEach(System.out::println);
 
-
+        stationService.searchStationByName("москва");
+        stationService.searchStationByName("иваново");
+        stationService.searchStationByName("САНКТ-ПЕТЕРБУРГ");
+        stationService.searchStationByName("иваново");
+        stationService.searchStationByName("САНКТ-ПЕТЕРБУРГ");
     }
 }
