@@ -14,24 +14,28 @@ public class App {
         StationService stationService = applicationContext.getBean("stationService", StationService.class);
         TrainService trainService = applicationContext.getBean("trainService", TrainService.class);
 
-        System.out.println(stationService.getByFullName("мосва"));
-        System.out.println(stationService.getByFullName("москва"));
-        System.out.println(stationService.getByFullName("москва"));
-        System.out.println(stationService.getByFullName("москоу"));
-        System.out.println(stationService.getByFullName("Иваново"));
-        System.out.println(stationService.getByFullName("Ивановофыв"));
+        System.out.println(stationService.getCodeByFullName("мосва"));
+        System.out.println(stationService.getCodeByFullName("москва"));
+        System.out.println(stationService.getCodeByFullName("москва"));
+        System.out.println(stationService.getCodeByFullName("москоу"));
+        System.out.println(stationService.getCodeByFullName("Иваново"));
+        System.out.println(stationService.getCodeByFullName("Ивановофыв"));
 
-        int departure = stationService.getByFullName("москва");
-        int arrival = stationService.getByFullName("Иваново");
+        int departure = stationService.getCodeByFullName("москва");
+        int arrival = stationService.getCodeByFullName("Иваново");
         String date = "24.03.2021";
 
         List<Train> trainList = trainService.getTrainsByParams(departure, arrival, date);
         trainList.forEach(System.out::println);
+        date = "24.03.2022";
+        trainList = trainService.getTrainsByParams(departure, arrival, date);
+        trainList.forEach(System.out::println);
 
-        stationService.searchStationByName("москва");
-        stationService.searchStationByName("иваново");
-        stationService.searchStationByName("САНКТ-ПЕТЕРБУРГ");
-        stationService.searchStationByName("иваново");
-        stationService.searchStationByName("САНКТ-ПЕТЕРБУРГ");
+        stationService.searchByPartOfName("москва");
+        stationService.searchByPartOfName("иваново");
+        stationService.searchByPartOfName("САНКТ-ПЕТЕРБУРГ");
+        stationService.searchByPartOfName("иваново");
+        stationService.searchByPartOfName("САНКТ-ПЕТЕРБУРГ");
+        stationService.searchByPartOfName("САНasd");
     }
 }
