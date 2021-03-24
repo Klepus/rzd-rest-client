@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.klepus.model.Car;
 import com.github.klepus.model.Train;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -23,7 +22,7 @@ import java.util.stream.Collectors;
 public class TrainService {
 
     private final RestTemplate restTemplate;
-    private final MessageService localeMessageService;
+    private final PrepareMessageService localePrepareMessageService;
     private final String requestRidURL = "https://pass.rzd.ru/timetable/public/ru?layer_id=5827&dir=0&tfl=3&checkSeats=0&code0={STATION_DEPART_CODE}&dt0={DATE_DEPART}&code1={STATION_ARRIVAL_CODE}";
     private final String requestTrainsWithRidURL = "https://pass.rzd.ru/timetable/public/ru?layer_id=5827&rid={RID_VALUE}";
 
@@ -35,9 +34,9 @@ public class TrainService {
     private final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy");
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public TrainService(RestTemplate restTemplate, MessageService localeMessageService) {
+    public TrainService(RestTemplate restTemplate, PrepareMessageService localePrepareMessageService) {
         this.restTemplate = restTemplate;
-        this.localeMessageService = localeMessageService;
+        this.localePrepareMessageService = localePrepareMessageService;
     }
 
     public List<Train> getTrainsByParams(int departureStationCode, int arrivalStationCode, String departDate) {
@@ -58,7 +57,7 @@ public class TrainService {
 
         if (cookies == null) {
             //TODO: Send to telegram error "Не могу обработать ваш запрос."
-            String message = localeMessageService.getMessage("reply.query.failed", "Emoji x_x ");
+            String message = localePrepareMessageService.getMessage("reply.query.failed", "Emoji x_x ");
             System.out.println(message);
 
             return Collections.emptyList();
@@ -135,7 +134,7 @@ public class TrainService {
         String responseBody = responseEntity.getBody();
         if (responseBodyHasNoTrains(responseBody)) {
             //TODO: Send to telegram "Дата отправления находится за пределами периода предварительной продажи."
-            String message = localeMessageService.getMessage("reply.trainSearch.dateOutOfBoundError", "Emoji -_- ");
+            String message = localePrepareMessageService.getMessage("reply.trainSearch.dateOutOfBoundError", "Emoji -_- ");
             System.out.println(message);
 
             return Collections.emptyMap();

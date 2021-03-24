@@ -7,12 +7,12 @@ import org.springframework.stereotype.Service;
 import java.util.Locale;
 
 @Service
-public class MessageService {
+public class PrepareMessageService {
 
     private final Locale locale;
     private final MessageSource messageSource;
 
-    public MessageService(MessageSource messageSource) {
+    public PrepareMessageService(MessageSource messageSource) {
         this.messageSource = messageSource;
         this.locale = Locale.forLanguageTag("ru-RU");
     }

@@ -10,11 +10,11 @@ import java.util.List;
 public class TicketService {
 
     private final TrainService trainService;
-    private final MessageService messageService;
+    private final PrepareMessageService prepareMessageService;
 
-    public TicketService(TrainService trainService, MessageService messageService) {
+    public TicketService(TrainService trainService, PrepareMessageService prepareMessageService) {
         this.trainService = trainService;
-        this.messageService = messageService;
+        this.prepareMessageService = prepareMessageService;
     }
 
     public void sendTicketInfo(List<Train> trains) {
@@ -24,11 +24,11 @@ public class TicketService {
             train.setAvailableCars(carsWithMinimalPrice);
 
             for (Car car : carsWithMinimalPrice) {
-                carsInfo.append(messageService.getMessage("subscription.carsTicketsInfo",
+                carsInfo.append(prepareMessageService.getMessage("subscription.carsTicketsInfo",
                         car.getCarType(), car.getFreeSeats(), car.getMinimalPrice()));
             }
 
-            String ticketInfoMessage = messageService.getMessage("reply.trainSearch.trainInfo",
+            String ticketInfoMessage = prepareMessageService.getMessage("reply.trainSearch.trainInfo",
                     "Emojis TRAIN! ", train.getNumber(), train.getBrand(), train.getStationDepart(), train.getDateDepart(), train.getTimeDepart(),
                     train.getStationArrival(), train.getDateArrival(), train.getTimeArrival(),
                     "Emojis CLOCKS... ", train.getTimeInWay(), carsInfo);

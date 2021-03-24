@@ -18,13 +18,13 @@ public class StationService {
 
     private final RestTemplate restTemplate;
     private final StationCache stationCache;
-    private final MessageService localeMessageService;
+    private final PrepareMessageService localePrepareMessageService;
     private final String requestURL = "https://pass.rzd.ru/suggester?lang=ru&stationNamePart=%s";
 
-    public StationService(RestTemplate restTemplate, StationCache stationCach, MessageService localeMessageService) {
+    public StationService(RestTemplate restTemplate, StationCache stationCach, PrepareMessageService localePrepareMessageService) {
         this.restTemplate = restTemplate;
         this.stationCache = stationCach;
-        this.localeMessageService = localeMessageService;
+        this.localePrepareMessageService = localePrepareMessageService;
     }
 
     public int getCodeByFullName(String stationName) {
@@ -48,7 +48,7 @@ public class StationService {
 
         if (optionalStationName.isPresent()) {
             //TODO: Send to telegram "Станция найдена"
-            String message = localeMessageService.getMessage("reply.stationBook.stationFound","Emoji ;) ", optionalStationName.get());
+            String message = localePrepareMessageService.getMessage("reply.stationBook.stationFound","Emoji ;) ", optionalStationName.get());
             System.out.println(message);
             return;
         }
@@ -61,14 +61,14 @@ public class StationService {
                 .collect(Collectors.toList());
         if (foundedNames.isEmpty()) {
             //TODO: Send to telegram "Станция не найдена"
-            String message = localeMessageService.getMessage("reply.trainSearch.stationNotFound","Emoji :( ");
+            String message = localePrepareMessageService.getMessage("reply.trainSearch.stationNotFound","Emoji :( ");
             System.out.println(message);
             return;
         }
         //TODO: Send to telegram "Станции найдены:" и вывести список станций
         StringBuilder names = new StringBuilder();
         foundedNames.forEach(name -> names.append(name).append("\n"));
-        String message = localeMessageService.getMessage("reply.stationBook.stationsFound","Emoji o_O ", names);
+        String message = localePrepareMessageService.getMessage("reply.stationBook.stationsFound","Emoji o_O ", names);
         System.out.println(message);
     }
 
